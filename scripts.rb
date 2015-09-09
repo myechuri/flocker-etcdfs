@@ -46,12 +46,25 @@ end
 
 def setup_etcd()
     $script = <<SCRIPT
-mkdir -p /var/lib/etcd
-curl -L  https://github.com/coreos/etcd/releases/download/v2.1.3/etcd-v2.1.3-linux-amd64.tar.gz -o /var/lib/etcd/etcd-v2.1.3-linux-amd64.tar.gz
-cd /var/lib/etcd
-tar xzvf /var/lib/etcd/etcd-v2.1.3-linux-amd64.tar.gz
-cd /var/lib/etcd/etcd-v2.1.3-linux-amd64
+# Setup etcd
+cd /var/lib
+curl -L  https://github.com/coreos/etcd/releases/download/v2.1.3/etcd-v2.1.3-linux-amd64.tar.gz -o etcd-v2.1.3-linux-amd64.tar.gz
+tar xzvf etcd-v2.1.3-linux-amd64.tar.gz
+cd /var/lib/etcd-v2.1.3-linux-amd64
 ./etcd &
+
+# Get golang - prereq for building etcd-fs
+apt-get -y install golang
+
+# Go get go-etcd, go-fuse - prereqs for etcd-fs
+go get github.com/coreos/go-etcd/etcd
+go get github.com/hanwen/go-fuse
+
+# Setup etcd-fs
+cd /var/lib
+git clone https://github.com/xetorthio/etcd-fs.git
+cd /var/lib/etcd-fs
+make build
 SCRIPT
     return $script
 end
