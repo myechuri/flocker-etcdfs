@@ -44,6 +44,18 @@ SCRIPT
     return $script
 end
 
+def setup_etcd()
+    $script = <<SCRIPT
+mkdir -p /var/lib/etcd
+curl -L  https://github.com/coreos/etcd/releases/download/v2.1.3/etcd-v2.1.3-linux-amd64.tar.gz -o /var/lib/etcd/etcd-v2.1.3-linux-amd64.tar.gz
+cd /var/lib/etcd
+tar xzvf /var/lib/etcd/etcd-v2.1.3-linux-amd64.tar.gz
+cd /var/lib/etcd/etcd-v2.1.3-linux-amd64
+./etcd &
+SCRIPT
+    return $script
+end
+
 def flocker_control_config()
     $script = <<SCRIPT
 cat <<EOF > /etc/init/flocker-control.override

@@ -28,6 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       install_ssh_keys() +
       copy_control_certs() +
       copy_agent_certs("node1") +
+      setup_etcd() +
       flocker_control_config() +
       flocker_agent_config("172.16.78.250") +
       flocker_plugin_config("172.16.78.250", "172.16.78.250")
