@@ -47,6 +47,7 @@ end
 def setup_etcd()
     $script = <<SCRIPT
 # Setup etcd
+# Default client port: 2379, default server-server port: 2380
 cd /var/lib
 curl -L  https://github.com/coreos/etcd/releases/download/v2.1.3/etcd-v2.1.3-linux-amd64.tar.gz -o etcd-v2.1.3-linux-amd64.tar.gz
 tar xzvf etcd-v2.1.3-linux-amd64.tar.gz
@@ -74,6 +75,8 @@ go get github.com/hanwen/go-fuse/fuse
 # Build etcd-fs
 make build
 
+# Start etcd-fs
+/var/lib/etcd-fs/etcdfs /var/lib/flocker http://localhost:4001 &
 SCRIPT
     return $script
 end
