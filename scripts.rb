@@ -56,15 +56,20 @@ cd /var/lib/etcd-v2.1.3-linux-amd64
 # Get golang - prereq for building etcd-fs
 apt-get -y install golang
 
-# Go get go-etcd, go-fuse - prereqs for etcd-fs
-go get github.com/coreos/go-etcd/etcd
-go get github.com/hanwen/go-fuse
 
 # Setup etcd-fs
 cd /var/lib
 git clone https://github.com/xetorthio/etcd-fs.git
+
+# Go get go-etcd, go-fuse - prereqs for etcd-fs
 cd /var/lib/etcd-fs
+export GOPATH=/var/lib/etcd-fs
+go get github.com/coreos/go-etcd/etcd
+go get github.com/hanwen/go-fuse/fuse
+
+# Build etcd-fs
 make build
+
 SCRIPT
     return $script
 end
