@@ -54,10 +54,14 @@ cd /var/lib/etcd-v2.1.3-linux-amd64
 ./etcd &
 
 # Get golang - prereq for building etcd-fs
-apt-get -y install golang
+# Get latest version of go - need 1.3 or higher for etcd-fs build.
+# apt-get -y install golang
+GO_VERSION=1.5
+wget http://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz
+tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
+export PATH=/usr/local/go/bin:$PATH
 
-
-# Setup etcd-fs
+# Get etcd-fs
 cd /var/lib
 git clone https://github.com/xetorthio/etcd-fs.git
 
