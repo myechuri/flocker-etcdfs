@@ -25,6 +25,8 @@ cluster is healthy
 
 ```
 vagrant@node1:~$ sudo bash
+root@node1:~# ls /var/lib/flocker
+current_configuration.v1.json
 root@node1:~# cat /var/lib/flocker/current_configuration.v1.json 
 {"nodes": [], "$__class__$": "Deployment"}root@node1:~# 
 root@node1:~# docker run --rm --volume-driver=flocker -v my:/data busybox sh -c "echo hello > /data/state.txt"
