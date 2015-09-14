@@ -23,16 +23,21 @@ cluster is healthy
 
 # Check correctness of etcd-fs
 
-Find the latest Flocker config file ``*current_configuration.v1.json.new`` in ``/var/lib/flocker``.
-
-```bash
-root@node1:/var/lib/flocker# cat /var/lib/flocker/R5nD5XzzUpoYqvHxcurrent_configuration.v1.json.new
-{"nodes": [], "$__class__$": "Deployment"}
+```
+vagrant@node1:~$ sudo bash
+root@node1:~# cat /var/lib/flocker/current_configuration.v1.json 
+{"nodes": [], "$__class__$": "Deployment"}root@node1:~# 
+root@node1:~# docker run --rm --volume-driver=flocker -v my:/data busybox sh -c "echo hello > /data/state.txt"
+root@node1:~# docker run --rm --volume-driver=flocker -v my:/data busybox sh -c "cat /data/state.txt"
+hello
+root@node1:~# cat /var/lib/flocker/current_configuration.v1.json 
+{"nodes": [{"applications": [], "manifestations": {"values": [["8bcde111-d4ca-4ede-b244-bb551af11092", {"$__class__$": "Manifestation", "primary": true, "dataset": {"deleted": false, "dataset_id": "8bcde111-d4ca-4ede-b244-bb551af11092", "$__class__$": "Dataset", "maximum_size": 107374182400, "metadata": {"values": [["name", "my"]], "$__class__$": "PMap"}}}]], "$__class__$": "PMap"}, "uuid": {"hex": "8a92f64e-f6ab-46b8-bc83-50f1ac75bc0f", "$__class__$": "UUID"}, "$__class__$": "Node"}], "$__class__$": "Deployment"}
 ```
 
-Verify that ``etcdctl`` gets the same content reported above:
-```bash
-root@node1:/var/lib/flocker# /var/lib/etcd-v2.1.3-linux-amd64/etcdctl get /R5nD5XzzUpoYqvHxcurrent_configuration.v1.json.new
-{"nodes": [], "$__class__$": "Deployment"}
-root@node1:/var/lib/flocker#
+Verify that ``etcdctl`` reports Flocker Control Agent state seen from ``etcd-fs``.
+
+```
+root@node1:~# /var/lib/etcd-v2.1.3-linux-amd64/etcdctl get current_configuration.v1.json
+{"nodes": [{"applications": [], "manifestations": {"values": [["8bcde111-d4ca-4ede-b244-bb551af11092", {"$__class__$": "Manifestation", "primary": true, "dataset": {"deleted": false, "dataset_id": "8bcde111-d4ca-4ede-b244-bb551af11092", "$__class__$": "Dataset", "maximum_size": 107374182400, "metadata": {"values": [["name", "my"]], "$__class__$": "PMap"}}}]], "$__class__$": "PMap"}, "uuid": {"hex": "8a92f64e-f6ab-46b8-bc83-50f1ac75bc0f", "$__class__$": "UUID"}, "$__class__$": "Node"}], "$__class__$": "Deployment"}
+root@node1:~# 
 ```
